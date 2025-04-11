@@ -42,15 +42,17 @@ export const FinancialChart = () => {
       const parsedData = JSON.parse(storedData);
       setUserData(parsedData);
       
-      // Generate monthly data based on user income
+      // Use actual user income data
       const income = parseFloat(parsedData.income) || 5000;
+      const expenses = parseFloat(parsedData.monthlyExpenses) || 3000;
+      const savings = income - expenses;
       
       // Generate 12 months of data
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const generatedMonthlyData = months.map((month, index) => {
         // Create some variation in monthly data
         const monthIncome = income * (0.9 + Math.random() * 0.2);
-        const monthExpenses = income * (0.5 + Math.random() * 0.3);
+        const monthExpenses = expenses * (0.9 + Math.random() * 0.2);
         const monthSavings = monthIncome - monthExpenses;
         
         return {
@@ -63,15 +65,15 @@ export const FinancialChart = () => {
       
       setMonthlyData(generatedMonthlyData);
       
-      // Generate expense breakdown based on income
+      // Generate expense breakdown based on actual expenses
       setExpensesData([
-        { name: "Housing", value: Math.round(income * 0.35) },
-        { name: "Food", value: Math.round(income * 0.2) },
-        { name: "Transportation", value: Math.round(income * 0.15) },
-        { name: "Utilities", value: Math.round(income * 0.1) },
-        { name: "Entertainment", value: Math.round(income * 0.08) },
-        { name: "Healthcare", value: Math.round(income * 0.07) },
-        { name: "Other", value: Math.round(income * 0.05) }
+        { name: "Housing", value: Math.round(expenses * 0.35) },
+        { name: "Food", value: Math.round(expenses * 0.2) },
+        { name: "Transportation", value: Math.round(expenses * 0.15) },
+        { name: "Utilities", value: Math.round(expenses * 0.1) },
+        { name: "Entertainment", value: Math.round(expenses * 0.08) },
+        { name: "Healthcare", value: Math.round(expenses * 0.07) },
+        { name: "Other", value: Math.round(expenses * 0.05) }
       ]);
       
       // Generate investment allocation based on risk tolerance
@@ -151,7 +153,7 @@ export const FinancialChart = () => {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value) => [`$${value}`, undefined]}
+                  formatter={(value) => [`₹${value}`, undefined]}
                   labelFormatter={(label) => `Month: ${label}`}
                 />
                 <Legend />
@@ -195,7 +197,7 @@ export const FinancialChart = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value, name) => [`$${value}`, name]} />
+                <Tooltip formatter={(value, name) => [`₹${value}`, name]} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

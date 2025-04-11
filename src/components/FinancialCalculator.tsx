@@ -71,7 +71,7 @@ export const FinancialCalculator = () => {
       setCompoundResult(result);
       toast({
         title: "Calculation Complete",
-        description: `Your investment will grow to $${result}`,
+        description: `Your investment will grow to ₹${result}`,
       });
     } catch (error) {
       toast({
@@ -92,7 +92,7 @@ export const FinancialCalculator = () => {
       setSimpleResult(result);
       toast({
         title: "Calculation Complete",
-        description: `Your investment will grow to $${result}`,
+        description: `Your investment will grow to ₹${result}`,
       });
     } catch (error) {
       toast({
@@ -114,7 +114,7 @@ export const FinancialCalculator = () => {
       setRetirementResult(result);
       toast({
         title: "Retirement Projection Complete",
-        description: `Your retirement nest egg could be $${result}`,
+        description: `Your retirement nest egg could be ₹${result}`,
       });
     } catch (error) {
       toast({
@@ -147,7 +147,7 @@ export const FinancialCalculator = () => {
           <TabsContent value="compound" className="space-y-4 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="principal">Initial Investment ($)</Label>
+                <Label htmlFor="principal">Initial Investment (₹)</Label>
                 <Input 
                   id="principal"
                   type="number"
@@ -188,7 +188,7 @@ export const FinancialCalculator = () => {
             {compoundResult && (
               <div className="mt-4 p-4 border rounded-md bg-muted">
                 <p className="font-semibold">Future Value:</p>
-                <p className="text-2xl font-bold">${compoundResult}</p>
+                <p className="text-2xl font-bold">₹{compoundResult}</p>
               </div>
             )}
           </TabsContent>
@@ -196,7 +196,7 @@ export const FinancialCalculator = () => {
           <TabsContent value="simple" className="space-y-4 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="simplePrincipal">Principal Amount ($)</Label>
+                <Label htmlFor="simplePrincipal">Principal Amount (₹)</Label>
                 <Input 
                   id="simplePrincipal"
                   type="number"
@@ -228,7 +228,7 @@ export const FinancialCalculator = () => {
             {simpleResult && (
               <div className="mt-4 p-4 border rounded-md bg-muted">
                 <p className="font-semibold">Future Value:</p>
-                <p className="text-2xl font-bold">${simpleResult}</p>
+                <p className="text-2xl font-bold">₹{simpleResult}</p>
               </div>
             )}
           </TabsContent>
@@ -236,7 +236,7 @@ export const FinancialCalculator = () => {
           <TabsContent value="retirement" className="space-y-4 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="currentSavings">Current Savings ($)</Label>
+                <Label htmlFor="currentSavings">Current Savings (₹)</Label>
                 <Input 
                   id="currentSavings"
                   type="number"
@@ -245,7 +245,7 @@ export const FinancialCalculator = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="monthlyContribution">Monthly Contribution ($)</Label>
+                <Label htmlFor="monthlyContribution">Monthly Contribution (₹)</Label>
                 <Input 
                   id="monthlyContribution"
                   type="number"
@@ -277,7 +277,7 @@ export const FinancialCalculator = () => {
             {retirementResult && (
               <div className="mt-4 p-4 border rounded-md bg-muted">
                 <p className="font-semibold">Estimated Retirement Savings:</p>
-                <p className="text-2xl font-bold">${retirementResult}</p>
+                <p className="text-2xl font-bold">₹{retirementResult}</p>
               </div>
             )}
           </TabsContent>

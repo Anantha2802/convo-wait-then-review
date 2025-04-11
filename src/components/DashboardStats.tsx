@@ -26,16 +26,16 @@ export const DashboardStats = () => {
       const parsedData = JSON.parse(storedData);
       setUserData(parsedData);
       
-      // Generate data based on user's income
-      const income = parseFloat(parsedData.income) || 5000;
-      const savingsBase = income * 0.2; // 20% of income
-      const investmentsBase = income * 0.15; // 15% of income
-      const expensesBase = income * 0.65; // 65% of income
+      // Generate data based on user's actual values
+      const monthlySavings = parseFloat(parsedData.income) - parseFloat(parsedData.monthlyExpenses) || 0;
+      const currentSavings = parseFloat(parsedData.currentSavings) || 0;
+      const currentInvestments = parseFloat(parsedData.currentInvestments) || 0;
+      const monthlyExpenses = parseFloat(parsedData.monthlyExpenses) || 0;
       
       setSparklineData({
-        savings: generateSparklineData(savingsBase, savingsBase * 0.2),
-        investments: generateSparklineData(investmentsBase, investmentsBase * 0.25),
-        expenses: generateSparklineData(expensesBase, expensesBase * 0.1)
+        savings: generateSparklineData(monthlySavings, monthlySavings * 0.2),
+        investments: generateSparklineData(currentInvestments, currentInvestments * 0.25),
+        expenses: generateSparklineData(monthlyExpenses, monthlyExpenses * 0.1)
       });
     }
   }, []);
@@ -53,20 +53,19 @@ export const DashboardStats = () => {
     );
   }
   
-  // Calculate values based on user income
-  const income = parseFloat(userData.income) || 0;
-  const savings = income * 0.2; // Assume 20% of income goes to savings
-  const investments = income * 0.15; // Assume 15% goes to investments
-  const expenses = income * 0.65; // Assume 65% goes to expenses
+  // Use actual values from user data
+  const monthlySavings = parseFloat(userData.income) - parseFloat(userData.monthlyExpenses) || 0;
+  const currentInvestments = parseFloat(userData.currentInvestments) || 0;
+  const monthlyExpenses = parseFloat(userData.monthlyExpenses) || 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Savings</CardTitle>
+          <CardTitle className="text-sm font-medium">Monthly Savings</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">${savings.toFixed(2)}</div>
+          <div className="text-2xl font-bold">₹{monthlySavings.toLocaleString()}</div>
           <div className="h-[50px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={sparklineData.savings}>
@@ -82,7 +81,7 @@ export const DashboardStats = () => {
           </div>
           <p className="text-xs text-muted-foreground flex items-center">
             <ArrowUpRight className="h-3 w-3 mr-1 text-green-500" />
-            Based on {userData.name}'s income
+            Based on {userData.name}'s income and expenses
           </p>
         </CardContent>
       </Card>
@@ -91,7 +90,7 @@ export const DashboardStats = () => {
           <CardTitle className="text-sm font-medium">Investments</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">${investments.toFixed(2)}</div>
+          <div className="text-2xl font-bold">₹{currentInvestments.toLocaleString()}</div>
           <div className="h-[50px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={sparklineData.investments}>
@@ -116,7 +115,7 @@ export const DashboardStats = () => {
           <CardTitle className="text-sm font-medium">Monthly Expenses</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">${expenses.toFixed(2)}</div>
+          <div className="text-2xl font-bold">₹{monthlyExpenses.toLocaleString()}</div>
           <div className="h-[50px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={sparklineData.expenses}>
@@ -132,7 +131,7 @@ export const DashboardStats = () => {
           </div>
           <p className="text-xs text-muted-foreground flex items-center">
             <ArrowDownRight className="h-3 w-3 mr-1 text-red-500" />
-            Estimated monthly spending
+            Monthly spending
           </p>
         </CardContent>
       </Card>
