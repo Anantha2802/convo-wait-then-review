@@ -12,34 +12,35 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Calculator, LayoutDashboard, Target, BrainCircuit, Activity, User, Settings, HelpCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // Menu items for clarity
 const menuItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    url: "#",
+    url: "/",
     isActive: true,
   },
   {
     title: "Financial Calculator",
     icon: Calculator,
-    url: "#calculator",
+    url: "/#calculator",
   },
   {
     title: "Goals Tracker",
     icon: Target,
-    url: "#goals",
+    url: "/#goals",
   },
   {
     title: "AI Insights",
     icon: BrainCircuit,
-    url: "#insights",
+    url: "/#insights",
   },
   {
     title: "Market Trends",
     icon: Activity,
-    url: "#trends",
+    url: "/trends",
   },
 ];
 
@@ -47,17 +48,17 @@ const accountItems = [
   {
     title: "Profile",
     icon: User,
-    url: "#profile",
+    url: "/profile",
   },
   {
     title: "Settings",
     icon: Settings,
-    url: "#settings",
+    url: "/settings",
   },
   {
     title: "Help & Support",
     icon: HelpCircle,
-    url: "#help",
+    url: "/help",
   },
 ];
 
@@ -77,10 +78,10 @@ export const FinancialSidebar = () => {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild data-state={item.isActive ? "active" : "inactive"}>
-                    <a href={item.url} className="flex items-center">
+                    <Link to={item.url} className="flex items-center">
                       <item.icon className="mr-2 h-5 w-5" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -95,10 +96,10 @@ export const FinancialSidebar = () => {
               {accountItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center">
+                    <Link to={item.url} className="flex items-center">
                       <item.icon className="mr-2 h-5 w-5" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

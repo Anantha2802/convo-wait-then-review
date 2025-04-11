@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { FinancialSidebar } from "@/components/FinancialSidebar";
 import { FinancialHeader } from "@/components/FinancialHeader";
@@ -8,8 +9,36 @@ import { FinancialChart } from "@/components/FinancialChart";
 import { AIRecommendations } from "@/components/AIRecommendations";
 import { FinancialGoals } from "@/components/FinancialGoals";
 import { Separator } from "@/components/ui/separator";
+import { OnboardingForm } from "@/components/OnboardingForm";
 
 const Index = () => {
+  const [isOnboardingComplete, setIsOnboardingComplete] = useState<boolean | null>(null);
+  
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const onboardingStatus = localStorage.getItem("onboardingComplete");
+    setIsOnboardingComplete(onboardingStatus === "true");
+  }, []);
+  
+  const handleOnboardingComplete = () => {
+    setIsOnboardingComplete(true);
+  };
+  
+  // Show loading state while checking localStorage
+  if (isOnboardingComplete === null) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+  
+  // Show onboarding form if not completed
+  if (!isOnboardingComplete) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+        <OnboardingForm onComplete={handleOnboardingComplete} />
+      </div>
+    );
+  }
+  
+  // Show dashboard if onboarding is complete
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
