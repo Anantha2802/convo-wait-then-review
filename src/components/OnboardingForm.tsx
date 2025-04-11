@@ -54,6 +54,9 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Clear any existing financial data
+    localStorage.removeItem("financialGoals");
+    
     // Save user data to localStorage
     localStorage.setItem("userData", JSON.stringify(values));
     localStorage.setItem("onboardingComplete", "true");
@@ -96,7 +99,7 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
               <FormItem>
                 <FormLabel>Monthly Income ($)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="5000" {...field} />
+                  <Input type="number" placeholder="Enter your monthly income" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,7 +113,7 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
               <FormItem>
                 <FormLabel>Savings Goal ($)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="20000" {...field} />
+                  <Input type="number" placeholder="Enter your savings target" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Card, 
   CardContent, 
@@ -25,43 +25,93 @@ import {
 } from "recharts";
 import { TrendingUp, PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
 
-// Mock data for charts (Creativity)
-const monthlyData = [
-  { name: "Jan", income: 4000, expenses: 2400, savings: 1600 },
-  { name: "Feb", income: 4500, expenses: 2000, savings: 2500 },
-  { name: "Mar", income: 5000, expenses: 3200, savings: 1800 },
-  { name: "Apr", income: 4800, expenses: 2800, savings: 2000 },
-  { name: "May", income: 5200, expenses: 3100, savings: 2100 },
-  { name: "Jun", income: 5500, expenses: 3300, savings: 2200 },
-  { name: "Jul", income: 5700, expenses: 3500, savings: 2200 },
-  { name: "Aug", income: 6000, expenses: 3200, savings: 2800 },
-  { name: "Sep", income: 5800, expenses: 3400, savings: 2400 },
-  { name: "Oct", income: 6200, expenses: 3600, savings: 2600 },
-  { name: "Nov", income: 6500, expenses: 3800, savings: 2700 },
-  { name: "Dec", income: 7000, expenses: 4200, savings: 2800 },
-];
-
-const expensesData = [
-  { name: "Housing", value: 35 },
-  { name: "Food", value: 20 },
-  { name: "Transportation", value: 15 },
-  { name: "Utilities", value: 10 },
-  { name: "Entertainment", value: 8 },
-  { name: "Healthcare", value: 7 },
-  { name: "Other", value: 5 },
-];
-
-const investmentsData = [
-  { name: "Stocks", value: 45 },
-  { name: "Bonds", value: 25 },
-  { name: "Real Estate", value: 20 },
-  { name: "Cash", value: 10 },
-];
-
+// Colors for charts
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#83a6ed', '#8dd1e1'];
 
 export const FinancialChart = () => {
   const [chartType, setChartType] = useState<string>("income-expense");
+  const [userData, setUserData] = useState<any>(null);
+  const [monthlyData, setMonthlyData] = useState<any[]>([]);
+  const [expensesData, setExpensesData] = useState<any[]>([]);
+  const [investmentsData, setInvestmentsData] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const storedData = localStorage.getItem("userData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setUserData(parsedData);
+      
+      // Generate monthly data based on user income
+      const income = parseFloat(parsedData.income) || 5000;
+      
+      // Generate 12 months of data
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const generatedMonthlyData = months.map((month, index) => {
+        // Create some variation in monthly data
+        const monthIncome = income * (0.9 + Math.random() * 0.2);
+        const monthExpenses = income * (0.5 + Math.random() * 0.3);
+        const monthSavings = monthIncome - monthExpenses;
+        
+        return {
+          name: month,
+          income: Math.round(monthIncome),
+          expenses: Math.round(monthExpenses),
+          savings: Math.round(monthSavings)
+        };
+      });
+      
+      setMonthlyData(generatedMonthlyData);
+      
+      // Generate expense breakdown based on income
+      setExpensesData([
+        { name: "Housing", value: Math.round(income * 0.35) },
+        { name: "Food", value: Math.round(income * 0.2) },
+        { name: "Transportation", value: Math.round(income * 0.15) },
+        { name: "Utilities", value: Math.round(income * 0.1) },
+        { name: "Entertainment", value: Math.round(income * 0.08) },
+        { name: "Healthcare", value: Math.round(income * 0.07) },
+        { name: "Other", value: Math.round(income * 0.05) }
+      ]);
+      
+      // Generate investment allocation based on risk tolerance
+      const riskTolerance = parsedData.riskTolerance || "medium";
+      
+      if (riskTolerance === "low") {
+        setInvestmentsData([
+          { name: "Bonds", value: 50 },
+          { name: "Stocks", value: 30 },
+          { name: "Real Estate", value: 10 },
+          { name: "Cash", value: 10 }
+        ]);
+      } else if (riskTolerance === "medium") {
+        setInvestmentsData([
+          { name: "Stocks", value: 45 },
+          { name: "Bonds", value: 30 },
+          { name: "Real Estate", value: 20 },
+          { name: "Cash", value: 5 }
+        ]);
+      } else { // high
+        setInvestmentsData([
+          { name: "Stocks", value: 70 },
+          { name: "Real Estate", value: 20 },
+          { name: "Bonds", value: 5 },
+          { name: "Cash", value: 5 }
+        ]);
+      }
+    }
+  }, []);
+
+  // If no user data is available, show empty state
+  if (!userData) {
+    return (
+      <Card className="w-full">
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">Please complete the onboarding process to see your financial charts.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">
@@ -71,7 +121,7 @@ export const FinancialChart = () => {
           Financial Visualization
         </CardTitle>
         <CardDescription>
-          Visualize your financial data to gain insights
+          Personalized financial charts based on your data
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -145,7 +195,7 @@ export const FinancialChart = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [`${value}%`, "Percentage"]} />
+                <Tooltip formatter={(value, name) => [`$${value}`, name]} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
