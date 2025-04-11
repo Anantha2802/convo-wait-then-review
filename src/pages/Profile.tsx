@@ -71,11 +71,27 @@ const Profile = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Monthly Income</p>
-                        <p className="text-lg">${parseFloat(userData.income).toLocaleString()}</p>
+                        <p className="text-lg">₹{parseFloat(userData.income).toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Current Savings</p>
+                        <p className="text-lg">₹{parseFloat(userData.currentSavings).toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Monthly Expenses</p>
+                        <p className="text-lg">₹{parseFloat(userData.monthlyExpenses).toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Current Investments</p>
+                        <p className="text-lg">₹{parseFloat(userData.currentInvestments).toLocaleString()}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Savings Goal</p>
-                        <p className="text-lg">${parseFloat(userData.savingsGoal).toLocaleString()}</p>
+                        <p className="text-lg">₹{parseFloat(userData.savingsGoal).toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Goal Timeframe</p>
+                        <p className="text-lg">{userData.timeframe} months</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Risk Tolerance</p>

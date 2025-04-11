@@ -37,8 +37,8 @@ export const FinancialGoals = () => {
           id: 1,
           name: "Savings Target",
           target: parseFloat(parsedData.savingsGoal),
-          current: parseFloat(parsedData.income) * 0.2, // Assume 20% of income as current savings
-          timeline: "December 2025", // Default timeline
+          current: parseFloat(parsedData.currentSavings || 0),
+          timeline: `${parsedData.timeframe} months`,
         };
         setGoals([initialGoal]);
         localStorage.setItem("financialGoals", JSON.stringify([initialGoal]));
@@ -140,7 +140,7 @@ export const FinancialGoals = () => {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="goal-target" className="text-right">
-                  Target ($)
+                  Target (₹)
                 </Label>
                 <Input
                   id="goal-target"
@@ -153,7 +153,7 @@ export const FinancialGoals = () => {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="goal-current" className="text-right">
-                  Current ($)
+                  Current (₹)
                 </Label>
                 <Input
                   id="goal-current"
@@ -170,7 +170,7 @@ export const FinancialGoals = () => {
                 </Label>
                 <Input
                   id="goal-timeline"
-                  placeholder="December 2025"
+                  placeholder="12 months"
                   className="col-span-3"
                   value={newGoal.timeline}
                   onChange={(e) => setNewGoal({ ...newGoal, timeline: e.target.value })}
@@ -196,7 +196,7 @@ export const FinancialGoals = () => {
                 <div className="flex justify-between items-center">
                   <h3 className="font-medium">{goal.name}</h3>
                   <span className="text-sm text-muted-foreground">
-                    Target: ${goal.target.toLocaleString()} by {goal.timeline}
+                    Target: ₹{goal.target.toLocaleString()} by {goal.timeline}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -206,8 +206,8 @@ export const FinancialGoals = () => {
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>${goal.current.toLocaleString()} saved</span>
-                  <span>${(goal.target - goal.current).toLocaleString()} to go</span>
+                  <span>₹{goal.current.toLocaleString()} saved</span>
+                  <span>₹{(goal.target - goal.current).toLocaleString()} to go</span>
                 </div>
               </div>
             ))}
@@ -216,4 +216,4 @@ export const FinancialGoals = () => {
       </CardContent>
     </Card>
   );
-};
+}

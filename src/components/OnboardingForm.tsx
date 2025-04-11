@@ -30,8 +30,20 @@ const formSchema = z.object({
   income: z.string().min(1, {
     message: "Please enter your monthly income.",
   }),
+  currentSavings: z.string().min(1, {
+    message: "Please enter your current savings amount.",
+  }),
+  monthlyExpenses: z.string().min(1, {
+    message: "Please enter your monthly expenses.",
+  }),
+  currentInvestments: z.string().min(1, {
+    message: "Please enter your current investments value.",
+  }),
   savingsGoal: z.string().min(1, {
     message: "Please enter your savings goal.",
+  }),
+  timeframe: z.string().min(1, {
+    message: "Please enter your savings timeframe in months.",
   }),
   riskTolerance: z.string({
     required_error: "Please select your risk tolerance.",
@@ -48,7 +60,11 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
     defaultValues: {
       name: "",
       income: "",
+      currentSavings: "",
+      monthlyExpenses: "",
+      currentInvestments: "",
       savingsGoal: "",
+      timeframe: "",
       riskTolerance: "",
     },
   });
@@ -60,6 +76,17 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
     // Save user data to localStorage
     localStorage.setItem("userData", JSON.stringify(values));
     localStorage.setItem("onboardingComplete", "true");
+    
+    // Create initial financial goal based on user input
+    const initialGoal = {
+      id: 1,
+      name: "Savings Target",
+      target: parseFloat(values.savingsGoal),
+      current: parseFloat(values.currentSavings),
+      timeline: `${parseInt(values.timeframe)} months`,
+    };
+    
+    localStorage.setItem("financialGoals", JSON.stringify([initialGoal]));
     
     toast({
       title: "Welcome to FinPlan Pro!",
@@ -97,9 +124,51 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
             name="income"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Monthly Income ($)</FormLabel>
+                <FormLabel>Monthly Income (₹)</FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="Enter your monthly income" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="currentSavings"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Current Savings (₹)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter your current savings" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="monthlyExpenses"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Monthly Expenses (₹)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter your monthly expenses" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="currentInvestments"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Current Investments (₹)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter your current investments value" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,9 +180,23 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
             name="savingsGoal"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Savings Goal ($)</FormLabel>
+                <FormLabel>Savings Goal (₹)</FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="Enter your savings target" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="timeframe"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Timeframe (months)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter timeframe to achieve goal" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
