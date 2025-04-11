@@ -19,7 +19,7 @@ const menuItems = [
     title: "Dashboard",
     icon: LayoutDashboard,
     url: "#",
-    active: true,
+    isActive: true,
   },
   {
     title: "Financial Calculator",
@@ -76,7 +76,7 @@ export const FinancialSidebar = () => {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild active={item.active}>
+                  <SidebarMenuButton asChild data-state={item.isActive ? "active" : "inactive"}>
                     <a href={item.url} className="flex items-center">
                       <item.icon className="mr-2 h-5 w-5" />
                       <span>{item.title}</span>
