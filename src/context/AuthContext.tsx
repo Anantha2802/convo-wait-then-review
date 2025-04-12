@@ -60,35 +60,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Update the signup function to use localStorage as our database
+  // since we cannot directly modify the server CSV file from the browser
   const signup = async (email: string, password: string, name: string): Promise<boolean> => {
     try {
-      // Fetch existing users
-      const response = await fetch('/users.csv');
-      const csvText = await response.text();
+      // Check if user already exists in localStorage
+      const existingUsers = localStorage.getItem('users') ? 
+        JSON.parse(localStorage.getItem('users') || '[]') : [];
       
-      // Check if user already exists
-      const lines = csvText.split('\n').slice(1); // Skip header
-      
-      for (const line of lines) {
-        if (!line.trim()) continue;
-        
-        const [csvEmail] = line.split(',');
-        if (csvEmail === email) {
-          // User already exists
-          return false;
-        }
+      const userExists = existingUsers.some((u: any) => u.email === email);
+      if (userExists) {
+        return false;
       }
       
-      // In a real app, we would send this to a server endpoint to append to the CSV
-      // Since we can't modify server files directly in browser, we'll simulate by storing in localStorage
+      // Add user to our "database"
+      const newUser = { email, password, name };
+      existingUsers.push(newUser);
+      localStorage.setItem('users', JSON.stringify(existingUsers));
       
-      // Store the user in localStorage for demo purposes
-      const newUser = { email, name };
-      localStorage.setItem('user', JSON.stringify(newUser));
-      setUser(newUser);
-      
-      // In a real app, we would append to CSV here
-      console.log(`New user would be added to CSV: ${email},${password},${name}`);
+      // Log the user in
+      const loggedInUser = { email, name };
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
+      setUser(loggedInUser);
       
       return true;
     } catch (error) {

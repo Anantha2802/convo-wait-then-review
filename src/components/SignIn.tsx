@@ -27,6 +27,7 @@ export function SignIn({ onToggleForm }: SignInProps) {
     setIsLoading(true);
     
     try {
+      // Try to login with CSV file first
       const success = await login(email, password);
       
       if (success) {
@@ -35,6 +36,26 @@ export function SignIn({ onToggleForm }: SignInProps) {
           description: "You have successfully signed in.",
         });
       } else {
+        // If CSV login fails, check localStorage
+        const existingUsers = localStorage.getItem('users') ? 
+          JSON.parse(localStorage.getItem('users') || '[]') : [];
+        
+        const user = existingUsers.find((u: any) => 
+          u.email === email && u.password === password
+        );
+        
+        if (user) {
+          // Login the user manually since they exist in localStorage
+          localStorage.setItem('user', JSON.stringify({ 
+            email: user.email, 
+            name: user.name 
+          }));
+          
+          // Redirect to dashboard (window reload will pick up the new user)
+          window.location.href = '/';
+          return;
+        }
+        
         setError("Invalid email or password. Please try again or sign up if you don't have an account.");
       }
     } catch (err) {
