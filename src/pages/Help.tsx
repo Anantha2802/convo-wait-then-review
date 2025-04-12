@@ -1,149 +1,269 @@
-
-import { FinancialHeader } from "@/components/FinancialHeader";
-import { FinancialSidebar } from "@/components/FinancialSidebar";
-import { Separator } from "@/components/ui/separator";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { PageLayout } from "@/components/PageLayout";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MessageCircle, FileQuestion, Lightbulb, BookOpen } from "lucide-react";
 
 const Help = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  const faqs = [
-    {
-      question: "How do I set financial goals?",
-      answer: "You can set financial goals by going to the Dashboard page and clicking the 'Add Goal' button in the Financial Goals section. Fill in the required details and save your goal to start tracking progress."
-    },
-    {
-      question: "How are investment recommendations generated?",
-      answer: "Investment recommendations are personalized based on your risk tolerance and financial situation provided during onboarding. Our system analyzes this information to suggest appropriate investment strategies."
-    },
-    {
-      question: "Can I change my risk tolerance level?",
-      answer: "Yes, you can update your risk tolerance by going to the Profile page and using the 'Reset Profile' button to update your information. This will trigger the onboarding process where you can select a new risk tolerance level."
-    },
-    {
-      question: "How do I read the financial charts?",
-      answer: "The financial charts display your income, expenses, and savings trends over time. You can hover over data points to see specific values and switch between different chart types using the tabs at the top of each chart."
-    },
-    {
-      question: "Is my data secure?",
-      answer: "Yes, all your financial data is stored locally on your device and isn't transmitted to any servers. Your information remains private and is only accessible from your current browser."
-    },
-    {
-      question: "How do I reset my profile?",
-      answer: "You can reset your profile by going to the Profile page and clicking the 'Reset Profile & Start Over' button. This will clear all your data and return you to the onboarding process."
-    }
-  ];
-  
-  const filteredFaqs = faqs.filter(
-    faq => faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
-           faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  
-  const handleSupport = () => {
-    toast({
-      title: "Support Request Received",
-      description: "Thank you for reaching out. Our team will contact you soon.",
-    });
-  };
-
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
-        <FinancialSidebar />
-        <div className="flex-1 flex flex-col">
-          <FinancialHeader />
-          <SidebarTrigger className="fixed left-4 top-4 z-50 sm:hidden" />
-          
-          <main className="flex-1 container mx-auto px-4 py-6">
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold tracking-tight">Help & Support</h1>
-              <p className="text-muted-foreground">
-                Get assistance and answers to your questions.
-              </p>
-            </div>
-            
-            <div className="relative mb-6">
-              <Input
-                type="search"
-                placeholder="Search for help topics..."
-                className="w-full"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            
-            <Separator className="my-6" />
-            
-            <div className="grid grid-cols-1 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Frequently Asked Questions</CardTitle>
-                  <CardDescription>Find answers to common questions about using FinPlan Pro</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {filteredFaqs.length > 0 ? (
-                    <Accordion type="single" collapsible className="w-full">
-                      {filteredFaqs.map((faq, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger>{faq.question}</AccordionTrigger>
-                          <AccordionContent>{faq.answer}</AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  ) : (
-                    <p className="text-center py-4 text-muted-foreground">No results found for "{searchQuery}"</p>
-                  )}
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contact Support</CardTitle>
-                  <CardDescription>Need more help? Our support team is here to assist you.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" placeholder="Your name" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="your.email@example.com" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="message">Message</Label>
-                      <textarea 
-                        id="message" 
-                        placeholder="Describe your issue or question..." 
-                        className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-                      />
-                    </div>
-                    <Button onClick={handleSupport}>Submit Request</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </main>
+    <PageLayout>
+      <div className="container mx-auto px-4 py-6">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold tracking-tight">Help & Support</h1>
+          <p className="text-muted-foreground">
+            Find answers to your questions and get assistance with using the application.
+          </p>
         </div>
+        
+        <Tabs defaultValue="faq" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="faq" className="flex items-center gap-2">
+              <FileQuestion className="h-4 w-4" />
+              <span className="hidden sm:inline">FAQ</span>
+            </TabsTrigger>
+            <TabsTrigger value="guides" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              <span className="hidden sm:inline">Guides</span>
+            </TabsTrigger>
+            <TabsTrigger value="tips" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              <span className="hidden sm:inline">Tips</span>
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Contact</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="faq" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+                <CardDescription>
+                  Find answers to common questions about FinPlan Pro.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>How do I reset my password?</AccordionTrigger>
+                    <AccordionContent>
+                      To reset your password, go to the login page and click on "Forgot Password". 
+                      Enter your email address, and we'll send you a link to reset your password.
+                      Follow the instructions in the email to create a new password.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger>Is my financial data secure?</AccordionTrigger>
+                    <AccordionContent>
+                      Yes, we take security very seriously. All your data is encrypted both in transit 
+                      and at rest. We use industry-standard security protocols and never share your 
+                      financial information with third parties without your explicit consent.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-3">
+                    <AccordionTrigger>Can I export my financial data?</AccordionTrigger>
+                    <AccordionContent>
+                      Yes, you can export your data in various formats including CSV, PDF, and Excel. 
+                      Go to Settings &gt; Data Management &gt; Export Data to download your information.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-4">
+                    <AccordionTrigger>How accurate are the AI recommendations?</AccordionTrigger>
+                    <AccordionContent>
+                      Our AI recommendations are based on your financial data, market trends, and 
+                      established financial principles. While we strive for high accuracy, they should 
+                      be considered as suggestions rather than financial advice. We recommend consulting 
+                      with a financial advisor for major financial decisions.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-5">
+                    <AccordionTrigger>Is there a mobile app available?</AccordionTrigger>
+                    <AccordionContent>
+                      Yes, FinPlan Pro is available as a mobile app for both iOS and Android devices. 
+                      You can download it from the App Store or Google Play Store. The mobile app 
+                      syncs with your web account, so you can access your financial information on the go.
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="guides" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>User Guides</CardTitle>
+                <CardDescription>
+                  Step-by-step instructions for using FinPlan Pro features.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Card className="border shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg">Getting Started</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Setting up your account</li>
+                        <li>Completing your financial profile</li>
+                        <li>Navigating the dashboard</li>
+                        <li>Understanding key metrics</li>
+                      </ul>
+                      <a href="#" className="text-blue-500 hover:underline block mt-2">Read guide →</a>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg">Financial Calculator</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Using the compound interest calculator</li>
+                        <li>Planning loan repayments</li>
+                        <li>Retirement planning calculations</li>
+                        <li>SIP investment projections</li>
+                      </ul>
+                      <a href="#" className="text-blue-500 hover:underline block mt-2">Read guide →</a>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg">Goals Tracker</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Creating financial goals</li>
+                        <li>Setting realistic timelines</li>
+                        <li>Tracking progress effectively</li>
+                        <li>Adjusting goals as needed</li>
+                      </ul>
+                      <a href="#" className="text-blue-500 hover:underline block mt-2">Read guide →</a>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg">AI Insights</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Understanding AI recommendations</li>
+                        <li>Interacting with the financial assistant</li>
+                        <li>Customizing insight preferences</li>
+                        <li>Implementing suggested actions</li>
+                      </ul>
+                      <a href="#" className="text-blue-500 hover:underline block mt-2">Read guide →</a>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="tips" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Financial Tips & Tricks</CardTitle>
+                <CardDescription>
+                  Helpful advice to make the most of your financial planning.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-medium text-lg mb-2">The 50/30/20 Budget Rule</h3>
+                    <p>Allocate 50% of your income to needs, 30% to wants, and 20% to savings and debt repayment. 
+                      This simple rule can help you maintain financial balance and ensure you're saving adequately.</p>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-medium text-lg mb-2">Emergency Fund Essentials</h3>
+                    <p>Aim to save 3-6 months of essential expenses in an easily accessible account. 
+                      This provides a financial buffer for unexpected situations like medical emergencies or job loss.</p>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-medium text-lg mb-2">Power of Compound Interest</h3>
+                    <p>Start investing early, even with small amounts. Thanks to compound interest, 
+                      time in the market is often more important than timing the market.</p>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-medium text-lg mb-2">Debt Reduction Strategy</h3>
+                    <p>Consider using either the avalanche method (paying off highest interest debt first) 
+                      or the snowball method (paying off smallest debts first) to systematically reduce your debts.</p>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-medium text-lg mb-2">Automate Your Finances</h3>
+                    <p>Set up automatic transfers to your savings and investment accounts on payday. 
+                      This "pay yourself first" approach ensures consistent saving before you have a chance to spend.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="contact" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Support</CardTitle>
+                <CardDescription>
+                  Get in touch with our support team for personalized assistance.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <div className="p-4 border rounded-lg">
+                      <h3 className="font-medium text-lg mb-2">Email Support</h3>
+                      <p className="mb-2">Our support team typically responds within 24 hours.</p>
+                      <a href="mailto:support@finplanpro.com" className="text-blue-500 hover:underline">
+                        support@finplanpro.com
+                      </a>
+                    </div>
+                    
+                    <div className="p-4 border rounded-lg">
+                      <h3 className="font-medium text-lg mb-2">Live Chat</h3>
+                      <p className="mb-2">Available Monday to Friday, 9 AM to 6 PM EST.</p>
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                        Start Chat
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="p-4 border rounded-lg">
+                      <h3 className="font-medium text-lg mb-2">Phone Support</h3>
+                      <p className="mb-2">For premium users, direct phone support is available.</p>
+                      <p className="font-medium">+1 (800) 555-1234</p>
+                      <p className="text-sm text-muted-foreground">Monday to Friday, 9 AM to 5 PM EST</p>
+                    </div>
+                    
+                    <div className="p-4 border rounded-lg">
+                      <h3 className="font-medium text-lg mb-2">Community Forum</h3>
+                      <p className="mb-2">Connect with other users and share tips and experiences.</p>
+                      <a href="#" className="text-blue-500 hover:underline">
+                        Visit the FinPlan Pro Community →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-    </SidebarProvider>
+    </PageLayout>
   );
 };
 
 export default Help;
-
-// Define Label component locally since we're using it
-const Label = ({ htmlFor, children }: { htmlFor?: string, children: React.ReactNode }) => {
-  return (
-    <label htmlFor={htmlFor} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-      {children}
-    </label>
-  );
-};
