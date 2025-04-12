@@ -8,8 +8,10 @@ import { FinancialChart } from "@/components/FinancialChart";
 import { Separator } from "@/components/ui/separator";
 import { OnboardingForm } from "@/components/OnboardingForm";
 import { Calculator, Target, BrainCircuit, Activity } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
   const [isOnboardingComplete, setIsOnboardingComplete] = useState<boolean | null>(null);
   
   useEffect(() => {
@@ -46,7 +48,9 @@ const Index = () => {
         
         <main className="flex-1 container mx-auto px-4 py-6">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold tracking-tight">Financial Dashboard</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome, {user?.name || "User"}
+            </h1>
             <p className="text-muted-foreground">
               Welcome to your personal financial advisor. Track, analyze, and plan your financial future.
             </p>
