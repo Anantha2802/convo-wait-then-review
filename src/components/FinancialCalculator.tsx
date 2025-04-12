@@ -28,7 +28,13 @@ const calculateSimpleInterest = (principal: number, rate: number, time: number) 
   return (principal + interest).toFixed(2);
 };
 
-const calculateRetirement = (currentSavings: number, monthlyContribution: number, timeHorizon: number, expectedReturn: number) => {
+const calculateRetirement = (
+  currentSavings: number, 
+  monthlyContribution: number, 
+  timeHorizon: number, 
+  expectedReturn: number,
+  inflationRate: number = 0
+) => {
   let total = currentSavings;
   const monthlyRate = expectedReturn / 100 / 12;
   
@@ -36,7 +42,20 @@ const calculateRetirement = (currentSavings: number, monthlyContribution: number
     total = total * (1 + monthlyRate) + monthlyContribution;
   }
   
-  return total.toFixed(2);
+  // Calculate inflation-adjusted value if inflation rate is provided
+  if (inflationRate > 0) {
+    const inflationAdjustment = Math.pow(1 + (inflationRate / 100), timeHorizon);
+    const inflationAdjustedValue = total / inflationAdjustment;
+    return {
+      nominalValue: total.toFixed(2),
+      inflationAdjustedValue: inflationAdjustedValue.toFixed(2)
+    };
+  }
+  
+  return {
+    nominalValue: total.toFixed(2),
+    inflationAdjustedValue: total.toFixed(2)
+  };
 };
 
 export const FinancialCalculator = () => {
@@ -58,7 +77,9 @@ export const FinancialCalculator = () => {
   const [monthlyContribution, setMonthlyContribution] = useState<string>("500");
   const [timeHorizon, setTimeHorizon] = useState<string>("30");
   const [expectedReturn, setExpectedReturn] = useState<string>("7");
-  const [retirementResult, setRetirementResult] = useState<string>("");
+  const [inflationRate, setInflationRate] = useState<string>("5");
+  const [retirementNominalResult, setRetirementNominalResult] = useState<string>("");
+  const [retirementAdjustedResult, setRetirementAdjustedResult] = useState<string>("");
 
   const calculateCompound = () => {
     try {
@@ -109,12 +130,16 @@ export const FinancialCalculator = () => {
         parseFloat(currentSavings),
         parseFloat(monthlyContribution),
         parseFloat(timeHorizon),
-        parseFloat(expectedReturn)
+        parseFloat(expectedReturn),
+        parseFloat(inflationRate)
       );
-      setRetirementResult(result);
+      
+      setRetirementNominalResult(result.nominalValue);
+      setRetirementAdjustedResult(result.inflationAdjustedValue);
+      
       toast({
         title: "Retirement Projection Complete",
-        description: `Your retirement nest egg could be ₹${result}`,
+        description: `Your nominal retirement nest egg could be ₹${result.nominalValue}`,
       });
     } catch (error) {
       toast({
@@ -271,13 +296,31 @@ export const FinancialCalculator = () => {
                   onChange={(e) => setExpectedReturn(e.target.value)}
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="inflationRate">Expected Inflation Rate (%)</Label>
+                <Input 
+                  id="inflationRate"
+                  type="number"
+                  value={inflationRate}
+                  onChange={(e) => setInflationRate(e.target.value)}
+                />
+              </div>
             </div>
             <Button onClick={calculateRetirementNest} className="w-full">Calculate</Button>
             
-            {retirementResult && (
-              <div className="mt-4 p-4 border rounded-md bg-muted">
-                <p className="font-semibold">Estimated Retirement Savings:</p>
-                <p className="text-2xl font-bold">₹{retirementResult}</p>
+            {retirementNominalResult && (
+              <div className="mt-4 space-y-4">
+                <div className="p-4 border rounded-md bg-muted">
+                  <p className="font-semibold">Nominal Future Value:</p>
+                  <p className="text-2xl font-bold">₹{retirementNominalResult}</p>
+                  <p className="text-sm text-muted-foreground">Before adjusting for inflation</p>
+                </div>
+                
+                <div className="p-4 border rounded-md bg-muted">
+                  <p className="font-semibold">Inflation-Adjusted Value:</p>
+                  <p className="text-2xl font-bold">₹{retirementAdjustedResult}</p>
+                  <p className="text-sm text-muted-foreground">In today's purchasing power</p>
+                </div>
               </div>
             )}
           </TabsContent>
